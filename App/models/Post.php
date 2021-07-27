@@ -24,9 +24,6 @@ class Post extends Model {
         ':body' => $this->body,
       );
       $this->db->query($query, $params);
-
-      
-
     }
 
     public function read($id) {

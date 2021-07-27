@@ -1,10 +1,15 @@
 <?php
-  //database params
-  define('DB_HOST', 'localhost');
-  define('DB_USER', 'root');
-  define('DB_PASS', '');
-  define('DB_NAME', 'mvc_blog');
+    //Database params
+    define('DB_HOST', 'localhost'); //Add your db host
+    define('DB_USER', 'root'); // Add your DB root
+    define('DB_PASS', ''); //Add your DB pass
+    define('DB_NAME', 'mvcframework'); //Add your DB Name
 
-  //application params
-  define('URL', 'http://localhost/mvc_blog/')
-?>
+    //APPROOT
+    define('APPROOT', dirname(dirname(__FILE__)));
+
+    //URLROOT (Dynamic links)
+    define('URLROOT', 'http://localhost/mvcblog');
+
+    //Sitename
+    define('SITENAME', 'Login & Register script');

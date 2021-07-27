@@ -2,75 +2,84 @@
 namespace App\Models;
 
 class Post extends Model {
-    public $id;
-    public $title;
-    public $body;
-    public $user_id;
+  private $db;
 
-    public function __construct($id, $title, $body, $author, $comments, $created_at, $updated_at) {
-        $this->id = $id;
-        $this->title = $title;
-        $this->body = $body;
-        $this->author = $author;
-        $this->comments = $comments;
-        $this->created_at = $created_at;
-        $this->updated_at = $updated_at;
-    }
+  public function __construct() {
+      $this->db = new Database;
+  }
 
-    public function create() {
-      $query = "INSERT INTO posts (title, body, created_at, updated_at) VALUES (:title, :body, NOW(), NOW())";
-      $query_params = array(
-        ':title' => $this->title,
-        ':body' => $this->body,
-      );
-      $this->db->query($query, $params);
-    }
+  public function findAllPosts() {
+      $this->db->query('SELECT * FROM posts ORDER BY created_at ASC');
 
-    public function read($id) {
-      $query = "SELECT (title, body) FROM posts WHERE id = :id";
-      $params = array(
-        ':id' => $id,
-      );
-      return $this->db->query($query, $params);
-    }
+      $results = $this->db->resultSet();
 
-    public function update() {
-      $query = "UPDATE posts SET title = :title, body = :body, updated_at = NOW() WHERE id = :id";
-      $query_params = array(
-        ':title' => $this->title,
-        ':body' => $this->body,
-        ':id' => $this->id,
-      );
-      return $this->db->query($query, $query_params);
-    }
+      return $results;
+  }
 
-    public function delete() {
-      $query = "DELETE FROM posts WHERE id = :id";
-      $params = array(
-        ':id' => $this->id,
-      );
-      return $this->db->query($query, $params);
-    }
+  public function addPost($data) {
+      $this->db->query('INSERT INTO posts (user_id, title, body) VALUES (:user_id, :title, :body)');
 
-    public function readAll() {
-      $query = "SELECT * FROM posts";
-      return $this->db->query($query);
-    }
+      $this->db->bind(':user_id', $data['user_id']);
+      $this->db->bind(':title', $data['title']);
+      $this->db->bind(':body', $data['body']);
 
-    public function author() {
-      $query = "SELECT * FROM users WHERE id = :user_id";
-      $params = array(
-        ':user_id' => $this->user_id,
-      );
-      return $this->db->query($query, $params);
-    }
+      if ($this->db->execute()) {
+          return true;
+      } else {
+          return false;
+      }
+  }
 
-    public function comments() {
-      $query = "SELECT * FROM comments WHERE post_id = :post_id";
-      $params = array(
-        ':post_id' => $this->id,
-      );
-      return $this->db->query($query, $params);
-    }
+  public function findPostById($id) {
+      $this->db->query('SELECT * FROM posts WHERE id = :id');
+
+      $this->db->bind(':id', $id);
+
+      $row = $this->db->single();
+
+      return $row;
+  }
+
+  public function updatePost($data) {
+      $this->db->query('UPDATE posts SET title = :title, body = :body WHERE id = :id');
+
+      $this->db->bind(':id', $data['id']);
+      $this->db->bind(':title', $data['title']);
+      $this->db->bind(':body', $data['body']);
+
+      if ($this->db->execute()) {
+          return true;
+      } else {
+          return false;
+      }
+  }
+
+  public function deletePost($id) {
+      $this->db->query('DELETE FROM posts WHERE id = :id');
+
+      $this->db->bind(':id', $id);
+
+      if ($this->db->execute()) {
+          return true;
+      } else {
+          return false;
+      }
+  }
+
+  public function author() {
+    $query = "SELECT * FROM users WHERE id = :user_id";
+    $params = array(
+      ':user_id' => $this->user_id,
+    );
+    return $this->db->query($query, $params);
+  }
+
+  public function comments() {
+    $query = "SELECT * FROM comments WHERE post_id = :post_id";
+    $params = array(
+      ':post_id' => $this->id,
+    );
+    return $this->db->query($query, $params);
+  }
 }
 ?>

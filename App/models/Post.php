@@ -1,4 +1,6 @@
 <?php
+namespace App\Models;
+
 class Post extends Model {
     public $id;
     public $title;
@@ -21,7 +23,10 @@ class Post extends Model {
         ':title' => $this->title,
         ':body' => $this->body,
       );
-      return $this->db->query($query, $params);
+      $this->db->query($query, $params);
+
+      
+
     }
 
     public function read($id) {

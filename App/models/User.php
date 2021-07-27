@@ -1,9 +1,12 @@
 <?php
+namespace App\Models;
+
 class User extends Model {
     public $id;
     public $name;
     public $email;
     public $password;
+    private $db;
 
     public function __construct($id, $name, $email, $password) {
       $this->id = $id;
@@ -12,6 +15,7 @@ class User extends Model {
       $this->password = $password;
       $this->created_at = date('Y-m-d H:i:s');
       $this->updated_at = date('Y-m-d H:i:s');
+      $this->db = new Database;
     }
 
     public function create() {
